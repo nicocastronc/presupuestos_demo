@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Presupuestos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3490dc',
+                        'secondary': '#ffed4a',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold text-primary">MiPresupuesto.io</a>
+                <!-- Botón de menú móvil -->
+                <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
+                <!-- Menú de escritorio -->
+                <div class="hidden md:flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'crear_presupuesto' %}" class="text-gray-700 hover:text-primary">Crear presupuesto</a>
+                        <a href="{% url 'lista_clientes' %}" class="text-gray-700 hover:text-primary">Clientes</a>
+                        <a href="{% url 'servicio_lista' %}" class="text-gray-700 hover:text-primary">Servicios</a>
+                        <a href="{% url 'account_logout' %}" class="bg-red-500 text-white px-4 py-2 rounded">Cerrar Sesión</a>
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="bg-primary text-white px-4 py-2 rounded mr-2">Iniciar Sesión</a>
+                        <a href="{% url 'account_signup' %}" class="bg-green-500 text-white px-4 py-2 rounded">Registrarse</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Menú móvil desplegable -->
+            <div id="mobile-menu" class="md:hidden hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    {% if user.is_authenticated %}
+                        <a href="#" class="text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded">Presupuestos</a>
+                        <a href="#" class="text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded">Clientes</a>
+                        <a href="{% url 'account_logout' %}" class="text-red-500 hover:bg-red-100 block px-3 py-2 rounded">Cerrar Sesión</a>
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="text-primary hover:bg-blue-100 block px-3 py-2 rounded">Iniciar Sesión</a>
+                        <a href="{% url 'account_signup' %}" class="text-green-500 hover:bg-green-100 block px-3 py-2 rounded">Registrarse</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

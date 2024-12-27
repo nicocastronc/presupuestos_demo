@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold mb-6">Crear Nuevo Presupuesto</h1>
+
+    <form method="post" id="presupuesto-form">
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addItemBtn = document.getElementById('add-item');
+        const itemsContainer = document.getElementById('items-container');
+        let itemCount = 1;
+    
+        // Código existente para agregar ítems
+        addItemBtn.addEventListener('click', function() {
+            fetch('/get-item-form/') 
+            .then(response => response.text())
+            .then(html => {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                itemsContainer.appendChild(tempDiv.firstChild);
+            });
+        });
+    
+        // Código existente para eliminar ítems
+        itemsContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item')) {
+                e.target.closest('.item-row').remove();
+            }
+        });
+    
+        // Nuevo código para precargar precio
+        itemsContainer.addEventListener('change', function(e) {
+            if (e.target.name === 'servicio') {
+                const selectedOption = e.target.selectedOptions[0];
+                const precio = selectedOption.getAttribute('data-precio');
+                const precioInput = e.target.closest('.item-row').querySelector('input[name="precio"]');
+                precioInput.value = precio;
+            }
+        });
+    });
+</script>
+{% endblock %}
